@@ -1,3 +1,4 @@
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -6,52 +7,62 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+
 spec:
   ingressClassName: "nginx"
-  rules:
-  # 1. Main Website Route (The Frontend!)
-  - host: "oasisapp.website"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: oasis-frontend
-            port:
-              number: 80
-              
-  - host: "www.oasisapp.website"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: oasis-frontend
-            port:
-              number: 80
 
-  # 2. Previews Route
-  - host: "*.previews.oasisapp.website"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: oasis-me-proxy
-            port:
-              number: 80
-  
-  # 3. API Gateway Route
-  - host: "api.oasisapp.website"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: api-gateway
-            port:
-              number: 80
+  tls:
+    - hosts:
+        - oasisapp.website
+        - www.oasisapp.website
+        - api.oasisapp.website
+      secretName: oasis-tls
+
+  rules:
+    # 1. Main Website Route
+    - host: "oasisapp.website"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: oasis-frontend
+                port:
+                  number: 80
+
+    - host: "www.oasisapp.website"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: oasis-frontend
+                port:
+                  number: 80
+
+    # 2. Previews Route
+    - host: "*.previews.oasisapp.website"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: oasis-me-proxy
+                port:
+                  number: 80
+
+    # 3. API Gateway Route
+    - host: "api.oasisapp.website"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway
+                port:
+                  number: 80
