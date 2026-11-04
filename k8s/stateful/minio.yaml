@@ -1,0 +1,85 @@
+# k8s/stateful/minio.yaml
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+  namespace: oasis-core
+spec:
+  selector:
+    matchLabels:
+      app: minio
+  serviceName: minio
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: quay.io/minio/aistor/minio:latest
+          args:
+            - server
+            - /data
+            - --console-address
+            - ":9001"
+            - --license
+            - /minio.license
+          ports:
+            - containerPort: 9000
+            - containerPort: 9001
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: MINIO_ROOT_USER
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: MINIO_ROOT_PASSWORD
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          volumeMounts:
+            - name: minio-data
+              mountPath: /data
+            - name: minio-license
+              mountPath: /minio.license
+              subPath: minio.license
+              readOnly: true
+
+      volumes:
+        - name: minio-license
+          secret:
+            secretName: minio-license
+
+  volumeClaimTemplates:
+    - metadata:
+        name: minio-data
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests:
+            storage: 20Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: oasis-core
+spec:
+  selector:
+    app: minio
+  ports:
+    - name: api
+      port: 9000
+    - name: console
+      port: 9001
