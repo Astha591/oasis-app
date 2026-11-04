@@ -42,7 +42,7 @@ spec:
                 port:
                   number: 80
 
-    # 2. Previews Route
+    # 2. Previews Route (Wildcard)
     - host: "*.previews.oasisapp.website"
       http:
         paths:
