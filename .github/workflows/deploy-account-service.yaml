@@ -9,7 +9,7 @@ on:
 
 env:
   SERVICE_NAME: account-service
-  IMAGE_NAME: anuj55149/lovable-account-service
+  IMAGE_NAME: aastha2003/lovable-account-service
 
 permissions:
   id-token: write
@@ -60,6 +60,6 @@ jobs:
         run: |
           kubectl set image deployment/${{ env.SERVICE_NAME }} \
           ${{ env.SERVICE_NAME }}=${{ env.IMAGE_NAME }}:${{ github.sha }} \
-          -n lovable-core
+          -n oasis-core
           
-          kubectl rollout status deployment/${{ env.SERVICE_NAME }} -n lovable-core
+          kubectl rollout status deployment/${{ env.SERVICE_NAME }} -n oasis-core
