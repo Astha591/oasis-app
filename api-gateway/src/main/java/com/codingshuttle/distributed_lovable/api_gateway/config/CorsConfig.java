@@ -16,7 +16,7 @@ public class CorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(Arrays.asList(
-                "https://oasisapp.website.in",
+                "https://oasisapp.website",
                 "https://www.oasisapp.website",
                 "http://localhost:5173"
         ));
