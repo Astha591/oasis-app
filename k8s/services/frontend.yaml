@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: oasis-frontend
-          image: aasthaa2003/oasis-frontend@sha256:44b92989a6cb763ac5383124aba3e49b4a46096440c0854687748bf1ee6a828f
+          image: aasthaa2003/oasis-frontend@sha256:c880a804ee80aeec6aa5f86fe7fbe6e7d6a7cc9da14b00474708de38fb449ba3
           imagePullPolicy: Always
           ports:
             - containerPort: 80
