@@ -17,7 +17,7 @@ public class CorsConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(Arrays.asList(
                 "https://oasisapp.website.in",
-                "https://www.oasisapp.website",
+                "http://www.oasisapp.website",
                 "http://localhost:5173"
         ));
         corsConfig.setMaxAge(3600L);
